@@ -19,6 +19,7 @@ contract DegenToken is ERC20 {
     }
 
     mapping(address => bool) public hasPurchased;
+    mapping(address => uint256[]) public playerItems;
 
     struct Item {
         string name;
@@ -58,6 +59,8 @@ contract DegenToken is ERC20 {
 
         _burn(_msgSender(), price);
         hasPurchased[msg.sender] = true;
+
+        playerItems[msg.sender].push(itemId);
     }
 
     function burnnn(uint256 amount) public onlyOwner {
@@ -76,4 +79,19 @@ contract DegenToken is ERC20 {
         Item memory item = items[itemId];
         return (item.name, item.price);
     }
+
+    function getAllItems() public view returns (Item[] memory) {
+    return items;
+}
+
+function getPlayerPurchasedItems(address player) public view returns (Item[] memory) {
+    uint256[] memory purchasedItemIds = playerItems[player];
+    Item[] memory purchasedItems = new Item[](purchasedItemIds.length);
+
+    for (uint256 i = 0; i < purchasedItemIds.length; i++) {
+        purchasedItems[i] = items[purchasedItemIds[i]];
+    }
+
+    return purchasedItems;
+}
 }
