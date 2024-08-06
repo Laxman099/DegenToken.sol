@@ -36,6 +36,10 @@ contract DegenToken is ERC20 {
         items.push(Item(name, price));
     }
 
+ function decimals() public view virtual override returns (uint8) {
+        return 0; 
+    }
+
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
